@@ -1,4 +1,8 @@
 # api.py
+#npm install react-data-table-component react-datepicker
+#npm install react-data-table-component react-datepicker highcharts highcharts-react-official
+# npm install react-resizable
+
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS

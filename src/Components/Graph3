@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -20,8 +21,8 @@ const HighchartsGraph = () => {
   const [compareWithTarget, setCompareWithTarget] = useState(false);
   const [selectedCurrencies, setSelectedCurrencies] = useState([{ value: 'AUD', label: 'AUD' }]);
   const [summary, setSummary] = useState('');
-  const [startDate, setStartDate] = useState(new Date('2017-01-01'));
-  const [endDate, setEndDate] = useState(new Date('2023-12-31'));
+  const [startDate, setStartDate] = useState(new Date('2023-01-01'));
+  const [endDate, setEndDate] = useState(new Date('2023-01-30'));
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -30,7 +31,7 @@ const HighchartsGraph = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/xva?start_date=${startDate.toISOString().split('T')[0]}&num_days=${Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24))}`);
+        const response = await fetch('/xva');
         const result = await response.json();
         setData(result);
         setLoading(false);
@@ -40,7 +41,13 @@ const HighchartsGraph = () => {
       }
     };
     fetchData();
-  }, [startDate, endDate]);
+  }, []);
+
+  const calculateTotal = (filteredData) => {
+    return filteredData.map(d => {
+      return [new Date(d.Date).getTime(), selectedCurrencies.reduce((acc, curr) => acc + d[curr.value], 0)];
+    });
+  };
 
   const getFilteredData = () => {
     return data.filter(d => {
@@ -63,8 +70,11 @@ const HighchartsGraph = () => {
   }, [loading, data, summary]);
 
   const filteredData = getFilteredData();
+  const totalValues = calculateTotal(filteredData);
 
-  const totalValues = filteredData.map(d => [new Date(d.Date).getTime(), d.Total]);
+  // Log the data for debugging
+  console.log('Filtered Data:', filteredData);
+  console.log('Total Values:', totalValues);
 
   const totalLine = {
     name: 'Total',
@@ -76,15 +86,18 @@ const HighchartsGraph = () => {
 
   const shadeData = {
     name: 'Shaded Area',
-    data: totalValues.map((point, index) => ({
-      x: point[0],
-      low: Math.min(point[1], filteredData[index].Target),
-      high: Math.max(point[1], filteredData[index].Target)
-    })),
+    data: totalValues.map((point, index) => {
+      const targetValue = filteredData[index]?.Target;
+      return {
+        x: point[0],
+        low: Math.min(point[1], targetValue),
+        high: Math.max(point[1], targetValue)
+      };
+    }),
     type: 'arearange',
     lineWidth: 0,
     linkedTo: ':previous',
-    color: 'rgba(0, 123, 255, 0.2)',
+    color: 'rgba(255, 0, 0, 0.2)', // Change this to your desired color
     fillOpacity: 0.3,
     zIndex: 0,
     marker: {
@@ -96,24 +109,31 @@ const HighchartsGraph = () => {
     setSelectedCurrencies(selectedOptions);
   };
 
+  const throttleData = (data, threshold = 500) => {
+    if (data.length <= threshold) return data;
+    const skip = Math.ceil(data.length / threshold);
+    return data.filter((_, index) => index % skip === 0);
+  };
+
   const getData = () => {
     const compareData = [
-      totalLine,
       ...selectedCurrencies.map(currency => ({
         name: currency.value,
-        data: filteredData.map(d => [new Date(d.Date).getTime(), d[currency.value]]),
+        data: throttleData(filteredData.map(d => [new Date(d.Date).getTime(), d[currency.value]])),
         color: getCurrencyColor(currency.value),
         marker: { enabled: false },
       })),
+      totalLine,
       {
         name: 'Target',
-        data: filteredData.map(d => [new Date(d.Date).getTime(), d.Target]),
+        data: throttleData(filteredData.map(d => [new Date(d.Date).getTime(), d.Target])),
         color: '#007bff',
         marker: { enabled: false },
         zIndex: 1,
       },
+      shadeData,
     ];
-    return compareWithTarget ? [...compareData, shadeData] : compareData;
+    return compareWithTarget ? compareData : compareData.slice(0, -1);
   };
 
   const getCurrencyColor = (currency) => {
@@ -146,7 +166,7 @@ const HighchartsGraph = () => {
     GBP: d.GBP,
     JPY: d.JPY,
     USD: d.USD,
-    Total: d.Total,
+    Total: totalValues[filteredData.indexOf(d)][1]
   }));
 
   const handleTooltipFormatter = function () {
@@ -245,7 +265,7 @@ const HighchartsGraph = () => {
         if (chart) {
           chart.xAxis[0].setExtremes(startDate.getTime(), endDate.getTime());
           chart.series.forEach(series => {
-            series.setData(getData().find(s => s.name              === series.name).data);
+            series.setData(getData().find(s => s.name === series.name).data);
           });
         }
       });
@@ -384,3 +404,5 @@ const customTableStyles = {
 };
 
 export default HighchartsGraph;
+
+

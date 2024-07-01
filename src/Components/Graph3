@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -31,7 +30,7 @@ const HighchartsGraph = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('/xva');
+        const response = await fetch(`/xva?start_date=${startDate.toISOString().split('T')[0]}&num_days=${Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24))}`);
         const result = await response.json();
         setData(result);
         setLoading(false);
@@ -41,11 +40,20 @@ const HighchartsGraph = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [startDate, endDate]);
+
+  const throttleData = (data, maxPoints = 1000) => {
+    const dataLength = data.length;
+    if (dataLength <= maxPoints) {
+      return data;
+    }
+    const step = Math.ceil(dataLength / maxPoints);
+    return data.filter((_, index) => index % step === 0);
+  };
 
   const calculateTotal = (filteredData) => {
     return filteredData.map(d => {
-      return [new Date(d.Date).getTime(), selectedCurrencies.reduce((acc, curr) => acc + d[curr.value], 0)];
+      return [new Date(d.Date).getTime(), d.Total];
     });
   };
 
@@ -72,13 +80,9 @@ const HighchartsGraph = () => {
   const filteredData = getFilteredData();
   const totalValues = calculateTotal(filteredData);
 
-  // Log the data for debugging
-  console.log('Filtered Data:', filteredData);
-  console.log('Total Values:', totalValues);
-
   const totalLine = {
     name: 'Total',
-    data: totalValues,
+    data: throttleData(totalValues),
     color: '#343a40',
     marker: { enabled: false },
     zIndex: 1,
@@ -86,18 +90,15 @@ const HighchartsGraph = () => {
 
   const shadeData = {
     name: 'Shaded Area',
-    data: totalValues.map((point, index) => {
-      const targetValue = filteredData[index]?.Target;
-      return {
-        x: point[0],
-        low: Math.min(point[1], targetValue),
-        high: Math.max(point[1], targetValue)
-      };
-    }),
+    data: throttleData(totalValues.map((point, index) => ({
+      x: point[0],
+      low: Math.min(point[1], filteredData[index].Target),
+      high: Math.max(point[1], filteredData[index].Target)
+    }))),
     type: 'arearange',
     lineWidth: 0,
     linkedTo: ':previous',
-    color: 'rgba(255, 0, 0, 0.2)', // Change this to your desired color
+    color: 'rgba(0, 123, 255, 0.2)',
     fillOpacity: 0.3,
     zIndex: 0,
     marker: {
@@ -107,12 +108,6 @@ const HighchartsGraph = () => {
 
   const handleCurrencyChange = (selectedOptions) => {
     setSelectedCurrencies(selectedOptions);
-  };
-
-  const throttleData = (data, threshold = 500) => {
-    if (data.length <= threshold) return data;
-    const skip = Math.ceil(data.length / threshold);
-    return data.filter((_, index) => index % skip === 0);
   };
 
   const getData = () => {
@@ -166,7 +161,7 @@ const HighchartsGraph = () => {
     GBP: d.GBP,
     JPY: d.JPY,
     USD: d.USD,
-    Total: totalValues[filteredData.indexOf(d)][1]
+    Total: d.Total
   }));
 
   const handleTooltipFormatter = function () {
@@ -356,6 +351,15 @@ const HighchartsGraph = () => {
               pagination
               highlightOnHover
               pointerOnHover
+              // selectableRows
+              // onSelectedRowsChange={({ selectedRows }) => {
+              //   if (selectedRows.length > 0) {
+              //     const start = new Date(selectedRows[0].Date);
+              //     const end = new Date(selectedRows[selectedRows.length - 1].Date);
+              //     setStartDate(start);
+              //     setEndDate(end);
+              //   }
+              // }}
               customStyles={customTableStyles}
             />
           </div>
@@ -404,5 +408,3 @@ const customTableStyles = {
 };
 
 export default HighchartsGraph;
-
-

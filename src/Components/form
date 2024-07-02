@@ -1,0 +1,189 @@
+// App.js
+import React, { useState } from 'react';
+import styled, { createGlobalStyle } from 'styled-components';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+`;
+
+const FormContainer = styled.div`
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  color: #b3b3b3;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+`;
+
+const RadioGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const RadioLabel = styled.label`
+  margin-bottom: 10px;
+`;
+
+const RadioInput = styled.input`
+  margin-right: 10px;
+`;
+
+const SubmitButton = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #6200ea;
+  color: #fff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #3700b3;
+  }
+`;
+
+const App = () => {
+  const [startDate, setStartDate] = useState(new Date());
+  const [formData, setFormData] = useState({
+    textField1: '',
+    textField2: '',
+    radioOption: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
+  return (
+    <>
+      <GlobalStyle />
+      <FormContainer>
+        <form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label>Date</Label>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              className="custom-datepicker"
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="textField1">Text Field 1</Label>
+            <Input
+              type="text"
+              id="textField1"
+              name="textField1"
+              value={formData.textField1}
+              onChange={handleInputChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="textField2">Text Field 2</Label>
+            <Input
+              type="text"
+              id="textField2"
+              name="textField2"
+              value={formData.textField2}
+              onChange={handleInputChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>Radio Options</Label>
+            <RadioGroup>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  name="radioOption"
+                  value="option1"
+                  checked={formData.radioOption === 'option1'}
+                  onChange={handleInputChange}
+                />
+                Option 1
+              </RadioLabel>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  name="radioOption"
+                  value="option2"
+                  checked={formData.radioOption === 'option2'}
+                  onChange={handleInputChange}
+                />
+                Option 2
+              </RadioLabel>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  name="radioOption"
+                  value="option3"
+                  checked={formData.radioOption === 'option3'}
+                  onChange={handleInputChange}
+                />
+                Option 3
+              </RadioLabel>
+            </RadioGroup>
+          </FormGroup>
+          <SubmitButton type="submit">Submit</SubmitButton>
+        </form>
+      </FormContainer>
+    </>
+  );
+};
+
+export default App;
+
+.custom-datepicker {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+}
+
+.react-datepicker__header {
+  background-color: #1e1e1e;
+  border-bottom: none;
+}
+
+.react-datepicker__current-month,
+.react-datepicker__day-name,
+.react-datepicker__day,
+.react-datepicker__time-name {
+  color: #b3b3b3;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #6200ea !important;
+}
+

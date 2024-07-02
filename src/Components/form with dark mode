@@ -1,0 +1,255 @@
+// App.js
+import React, { useState } from 'react';
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: ${(props) => props.theme.bodyBg};
+    color: ${(props) => props.theme.textColor};
+    font-family: Arial, Helvetica, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+`;
+
+const darkTheme = {
+  bodyBg: '#121212',
+  formBg: '#1e1e1e',
+  textColor: '#ffffff',
+  inputBg: '#333',
+  inputColor: '#fff',
+  labelColor: '#b3b3b3',
+  buttonBg: '#6200ea',
+  buttonHoverBg: '#3700b3',
+};
+
+const lightTheme = {
+  bodyBg: '#ffffff',
+  formBg: '#f0f0f0',
+  textColor: '#000000',
+  inputBg: '#ffffff',
+  inputColor: '#000',
+  labelColor: '#333333',
+  buttonBg: '#6200ea',
+  buttonHoverBg: '#3700b3',
+};
+
+const FormContainer = styled.div`
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: ${(props) => props.theme.formBg};
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+`;
+
+const FormGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Label = styled.label`
+  display: block;
+  margin-bottom: 5px;
+  color: ${(props) => props.theme.labelColor};
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: ${(props) => props.theme.inputBg};
+  color: ${(props) => props.theme.inputColor};
+`;
+
+const RadioGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const RadioLabel = styled.label`
+  margin-bottom: 10px;
+  color: ${(props) => props.theme.labelColor};
+`;
+
+const RadioInput = styled.input`
+  margin-right: 10px;
+`;
+
+const SubmitButton = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: ${(props) => props.theme.buttonBg};
+  color: #fff;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${(props) => props.theme.buttonHoverBg};
+  }
+`;
+
+const ThemeToggleButton = styled.button`
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: ${(props) => props.theme.buttonBg};
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 20px;
+
+  &:hover {
+    background-color: ${(props) => props.theme.buttonHoverBg};
+  }
+`;
+
+const App = () => {
+  const [theme, setTheme] = useState(darkTheme);
+  const [startDate, setStartDate] = useState(new Date());
+  const [formData, setFormData] = useState({
+    textField1: '',
+    textField2: '',
+    radioOption: '',
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+  };
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === darkTheme ? lightTheme : darkTheme));
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <FormContainer>
+        <ThemeToggleButton onClick={toggleTheme}>
+          Switch to {theme === darkTheme ? 'Light' : 'Dark'} Theme
+        </ThemeToggleButton>
+        <form onSubmit={handleSubmit}>
+          <FormGroup>
+            <Label>Date</Label>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              className="custom-datepicker"
+              calendarClassName={theme === darkTheme ? 'calendar-dark' : 'calendar-light'}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="textField1">Text Field 1</Label>
+            <Input
+              type="text"
+              id="textField1"
+              name="textField1"
+              value={formData.textField1}
+              onChange={handleInputChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="textField2">Text Field 2</Label>
+            <Input
+              type="text"
+              id="textField2"
+              name="textField2"
+              value={formData.textField2}
+              onChange={handleInputChange}
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>Radio Options</Label>
+            <RadioGroup>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  name="radioOption"
+                  value="option1"
+                  checked={formData.radioOption === 'option1'}
+                  onChange={handleInputChange}
+                />
+                Option 1
+              </RadioLabel>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  name="radioOption"
+                  value="option2"
+                  checked={formData.radioOption === 'option2'}
+                  onChange={handleInputChange}
+                />
+                Option 2
+              </RadioLabel>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  name="radioOption"
+                  value="option3"
+                  checked={formData.radioOption === 'option3'}
+                  onChange={handleInputChange}
+                />
+                Option 3
+              </RadioLabel>
+            </RadioGroup>
+          </FormGroup>
+          <SubmitButton type="submit">Submit</SubmitButton>
+        </form>
+      </FormContainer>
+    </ThemeProvider>
+  );
+};
+
+export default App;
+
+
+
+
+.custom-datepicker {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--datepicker-bg);
+  color: var(--datepicker-color);
+}
+
+.calendar-dark .react-datepicker__header {
+  background-color: #1e1e1e;
+  border-bottom: none;
+}
+
+.calendar-dark .react-datepicker__current-month,
+.calendar-dark .react-datepicker__day-name,
+.calendar-dark .react-datepicker__day,
+.calendar-dark .react-datepicker__time-name {
+  color: #b3b3b3;
+}
+
+.calendar-dark .react-datepicker__day--selected,
+.calendar-dark .react-datepicker__day--keyboard-selected {
+  background-color: #6200ea !important;
+}
+
+.calendar-light .react-datepicker__header {
+  background-color: #f0f0f0;
+  border-bottom: none;
+}
+
+.calendar-light .react-datepicker__current-month,
+.calendar-light .react-datepicker__day-name,
+.calendar-light .react-datepicker__day,
+.calendar-light .react-datepicker__time-name {
+  color: #333333;
+}
+
+.calendar-light .react-datepicker__day--selected,
+.calendar-light .react-datepicker__day--keyboard-selected {
+  background-color: #6200ea !important;
+}

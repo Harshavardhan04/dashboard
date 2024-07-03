@@ -1,0 +1,1003 @@
+// // import React, { useState } from 'react';
+// // import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
+// // import DatePicker from 'react-datepicker';
+// // import 'react-datepicker/dist/react-datepicker.css';
+// // import { useForm, Controller } from 'react-hook-form';
+// // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// // import { faCalendarAlt, faFolderOpen, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+// // import './fvaForm.css';
+
+// // const GlobalStyle = createGlobalStyle`
+// //   body {
+// //     background: ${(props) => props.theme.bodyBg};
+// //     color: ${(props) => props.theme.textColor};
+// //   }
+// // `;
+
+// // const darkTheme = {
+// //   bodyBg: 'linear-gradient(135deg, #1d1d1d, #333)',
+// //   formBg: '#282828',
+// //   textColor: '#ffffff',
+// //   inputBg: '#444',
+// //   inputColor: '#fff',
+// //   labelColor: '#b3b3b3',
+// //   buttonBg: '#6200ea',
+// //   buttonHoverBg: '#3700b3',
+// //   borderColor: '#555',
+// //   placeholderColor: '#757575',
+// //   toggleBg: '#757575',
+// //   toggleSwitchBg: '#121212',
+// //   cardBg: '#2c2c2c',
+// //   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+// // };
+
+// // const lightTheme = {
+// //   bodyBg: 'linear-gradient(135deg, #ffffff, #f0f0f0)',
+// //   formBg: '#f9f9f9',
+// //   textColor: '#000000',
+// //   inputBg: '#ffffff',
+// //   inputColor: '#000',
+// //   labelColor: '#333333',
+// //   buttonBg: '#6200ea',
+// //   buttonHoverBg: '#3700b3',
+// //   borderColor: '#ccc',
+// //   placeholderColor: '#aaa',
+// //   toggleBg: '#ccc',
+// //   toggleSwitchBg: '#ffffff',
+// //   cardBg: '#ffffff',
+// //   boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+// // };
+
+// // const FormContainer = styled.div.attrs({
+// //   className: 'form-container',
+// // })``;
+
+// // const FormGroup = styled.div.attrs({
+// //   className: 'form-group',
+// // })``;
+
+// // const Label = styled.label.attrs({
+// //   className: 'label',
+// // })``;
+
+// // const IconWrapper = styled.div.attrs({
+// //   className: 'icon-wrapper',
+// // })``;
+
+// // const Input = styled.input.attrs({
+// //   className: 'input',
+// // })``;
+
+// // const TextArea = styled.textarea.attrs({
+// //   className: 'textarea',
+// // })``;
+
+// // const DateInputWrapper = styled.div.attrs({
+// //   className: 'date-input-wrapper',
+// // })``;
+
+// // const RadioGroup = styled.div.attrs({
+// //   className: 'radio-group',
+// // })``;
+
+// // const RadioLabel = styled.label.attrs({
+// //   className: 'radio-label',
+// // })``;
+
+// // const RadioInput = styled.input.attrs({
+// //   className: 'radio-input',
+// // })``;
+
+// // const SubmitButton = styled.button.attrs({
+// //   className: 'submit-button',
+// // })``;
+
+// // const ToggleSwitchContainer = styled.div.attrs({
+// //   className: 'toggle-switch-container',
+// // })``;
+
+// // const ToggleLabel = styled.label.attrs({
+// //   className: 'toggle-label',
+// // })``;
+
+// // const ToggleSwitch = styled.div.attrs({
+// //   className: 'toggle-switch',
+// // })``;
+
+// // const ErrorMessage = styled.p.attrs({
+// //   className: 'error-message',
+// // })``;
+
+// // const FVABotForm = () => {
+// //   const [theme, setTheme] = useState(darkTheme);
+// //   const { register, handleSubmit, control, formState: { errors } } = useForm();
+// //   const [startDate, setStartDate] = useState(new Date());
+
+// //   const onSubmit = (data) => {
+// //     console.log(data);
+// //   };
+
+// //   const toggleTheme = () => {
+// //     setTheme((prevTheme) => (prevTheme === darkTheme ? lightTheme : darkTheme));
+// //   };
+
+// //   return (
+// //     <ThemeProvider theme={theme}>
+// //       <GlobalStyle />
+// //       <FormContainer>
+// //         <ToggleSwitchContainer>
+// //           <ToggleLabel>Toggle Theme</ToggleLabel>
+// //           <ToggleSwitch active={theme === lightTheme} onClick={toggleTheme} />
+// //         </ToggleSwitchContainer>
+// //         <form onSubmit={handleSubmit(onSubmit)}>
+// //           <FormGroup>
+// //             <Label>Select Run Date</Label>
+// //             <DateInputWrapper>
+// //               <IconWrapper>
+// //                 <FontAwesomeIcon icon={faCalendarAlt} />
+// //               </IconWrapper>
+// //               <Controller
+// //                 control={control}
+// //                 name="runDate"
+// //                 render={({ field }) => (
+// //                   <DatePicker
+// //                     selected={startDate}
+// //                     onChange={(date) => {
+// //                       setStartDate(date);
+// //                       field.onChange(date);
+// //                     }}
+// //                     className="custom-datepicker"
+// //                     calendarClassName={theme === darkTheme ? 'calendar-dark' : 'calendar-light'}
+// //                   />
+// //                 )}
+// //               />
+// //             </DateInputWrapper>
+// //             {errors.runDate && <ErrorMessage>This field is required</ErrorMessage>}
+// //           </FormGroup>
+// //           <FormGroup>
+// //             <Label>Select Output Type</Label>
+// //             <RadioGroup>
+// //               <RadioLabel>
+// //                 <RadioInput
+// //                   type="radio"
+// //                   {...register("outputType", { required: true })}
+// //                   value="all"
+// //                 />
+// //                 All
+// //               </RadioLabel>
+// //               <RadioLabel>
+// //                 <RadioInput
+// //                   type="radio"
+// //                   {...register("outputType", { required: true })}
+// //                   value="PVTableWithHeaders"
+// //                 />
+// //                 PVTableWithHeaders
+// //               </RadioLabel>
+// //               <RadioLabel>
+// //                 <RadioInput
+// //                   type="radio"
+// //                   {...register("outputType", { required: true })}
+// //                   value="PVUSDTableWithHeaders"
+// //                 />
+// //                 PVUSDTableWithHeaders
+// //               </RadioLabel>
+// //               <RadioLabel>
+// //                 <RadioInput
+// //                   type="radio"
+// //                   {...register("outputType", { required: true })}
+// //                   value="RiskTableWithHeaders"
+// //                 />
+// //                 RiskTableWithHeaders
+// //               </RadioLabel>
+// //               <RadioLabel>
+// //                 <RadioInput
+// //                   type="radio"
+// //                   {...register("outputType", { required: true })}
+// //                   value="RiskTableWithHeadersLite"
+// //                 />
+// //                 RiskTableWithHeadersLite
+// //               </RadioLabel>
+// //             </RadioGroup>
+// //             {errors.outputType && <ErrorMessage>This field is required</ErrorMessage>}
+// //           </FormGroup>
+// //           <FormGroup>
+// //             <Label htmlFor="outputDirectory">Enter Output Directory</Label>
+// //             <IconWrapper>
+// //               <FontAwesomeIcon icon={faFolderOpen} />
+// //             </IconWrapper>
+// //             <Input
+// //               type="text"
+// //               id="outputDirectory"
+// //               {...register("outputDirectory", { required: true })}
+// //               placeholder="\\global.nomura.com\gm\EU\Business_Reso\..."
+// //             />
+// //             {errors.outputDirectory && <ErrorMessage>This field is required</ErrorMessage>}
+// //           </FormGroup>
+// //           <FormGroup>
+// //             <Label htmlFor="curveData">Enter Basis SOFR / Unmanaged Unsecured 3M Curve</Label>
+// //             <IconWrapper>
+// //               <FontAwesomeIcon icon={faExchangeAlt} />
+// //             </IconWrapper>
+// //             <TextArea
+// //               id="curveData"
+// //               {...register("curveData", { required: true })}
+// //               rows="4"
+// //               placeholder="Copy the curve (incl. tenors) from Excel without headers"
+// //             />
+// //             {errors.curveData && <ErrorMessage>This field is required</ErrorMessage>}
+// //           </FormGroup>
+// //           <SubmitButton type="submit">Submit</SubmitButton>
+// //         </form>
+// //       </FormContainer>
+// //     </ThemeProvider>
+// //   );
+// // };
+
+// // export default FVABotForm;
+
+// import React, { useState } from 'react';
+// import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
+// import DatePicker from 'react-datepicker';
+// import 'react-datepicker/dist/react-datepicker.css';
+// import { useForm, Controller } from 'react-hook-form';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { faCalendarAlt, faFolderOpen, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+// import './fvaForm.css';
+
+// const GlobalStyle = createGlobalStyle`
+//   body {
+//     background: ${(props) => props.theme.bodyBg};
+//     color: ${(props) => props.theme.textColor};
+//   }
+//   .form-container {
+//     --form-bg: ${(props) => props.theme.formBg};
+//     --text-color: ${(props) => props.theme.textColor};
+//     --input-bg: ${(props) => props.theme.inputBg};
+//     --input-color: ${(props) => props.theme.inputColor};
+//     --label-color: ${(props) => props.theme.labelColor};
+//     --button-bg: ${(props) => props.theme.buttonBg};
+//     --button-hover-bg: ${(props) => props.theme.buttonHoverBg};
+//     --border-color: ${(props) => props.theme.borderColor};
+//     --placeholder-color: ${(props) => props.theme.placeholderColor};
+//     --toggle-bg: ${(props) => props.theme.toggleBg};
+//     --toggle-switch-bg: ${(props) => props.theme.toggleSwitchBg};
+//     --card-bg: ${(props) => props.theme.cardBg};
+//     --box-shadow: ${(props) => props.theme.boxShadow};
+//   }
+// `;
+
+// const darkTheme = {
+//   bodyBg: 'linear-gradient(135deg, #1d1d1d, #333)',
+//   formBg: '#282828',
+//   textColor: '#ffffff',
+//   inputBg: '#444',
+//   inputColor: '#fff',
+//   labelColor: '#b3b3b3',
+//   buttonBg: '#6200ea',
+//   buttonHoverBg: '#3700b3',
+//   borderColor: '#555',
+//   placeholderColor: '#757575',
+//   toggleBg: '#757575',
+//   toggleSwitchBg: '#121212',
+//   cardBg: '#2c2c2c',
+//   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+// };
+
+// const lightTheme = {
+//   bodyBg: 'linear-gradient(135deg, #ffffff, #f0f0f0)',
+//   formBg: '#f9f9f9',
+//   textColor: '#000000',
+//   inputBg: '#ffffff',
+//   inputColor: '#000',
+//   labelColor: '#333333',
+//   buttonBg: '#6200ea',
+//   buttonHoverBg: '#3700b3',
+//   borderColor: '#ccc',
+//   placeholderColor: '#aaa',
+//   toggleBg: '#ccc',
+//   toggleSwitchBg: '#ffffff',
+//   cardBg: '#ffffff',
+//   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+// };
+
+// const FormContainer = styled.div.attrs({
+//   className: 'form-container',
+// })``;
+
+// const FormGroup = styled.div.attrs({
+//   className: 'form-group',
+// })``;
+
+// const Label = styled.label.attrs({
+//   className: 'label',
+// })``;
+
+// const IconWrapper = styled.div.attrs({
+//   className: 'icon-wrapper',
+// })``;
+
+// const Input = styled.input.attrs({
+//   className: 'input',
+// })``;
+
+// const TextArea = styled.textarea.attrs({
+//   className: 'textarea',
+// })``;
+
+// const DateInputWrapper = styled.div.attrs({
+//   className: 'date-input-wrapper',
+// })``;
+
+// const RadioGroup = styled.div.attrs({
+//   className: 'radio-group',
+// })``;
+
+// const RadioLabel = styled.label.attrs({
+//   className: 'radio-label',
+// })``;
+
+// const RadioInput = styled.input.attrs({
+//   className: 'radio-input',
+// })``;
+
+// const SubmitButton = styled.button.attrs({
+//   className: 'submit-button',
+// })``;
+
+// const ToggleSwitchContainer = styled.div.attrs({
+//   className: 'toggle-switch-container',
+// })``;
+
+// const ToggleLabel = styled.label.attrs({
+//   className: 'toggle-label',
+// })``;
+
+// const ToggleSwitch = styled.div.attrs({
+//   className: 'toggle-switch',
+// })``;
+
+// const ErrorMessage = styled.p.attrs({
+//   className: 'error-message',
+// })``;
+
+// const FVABotForm = () => {
+//   const [theme, setTheme] = useState(darkTheme);
+//   const { register, handleSubmit, control, formState: { errors } } = useForm();
+//   const [startDate, setStartDate] = useState(new Date());
+
+//   const onSubmit = (data) => {
+//     console.log(data);
+//   };
+
+//   const toggleTheme = () => {
+//     setTheme((prevTheme) => (prevTheme === darkTheme ? lightTheme : darkTheme));
+//   };
+
+//   return (
+//     <ThemeProvider theme={theme}>
+//       <GlobalStyle />
+//       <FormContainer>
+//         <ToggleSwitchContainer>
+//           <ToggleLabel>Toggle Theme</ToggleLabel>
+//           <ToggleSwitch
+//             className={theme === lightTheme ? 'active' : ''}
+//             onClick={toggleTheme}
+//           />
+//         </ToggleSwitchContainer>
+//         <form onSubmit={handleSubmit(onSubmit)}>
+//           <FormGroup>
+//             <Label>Select Run Date</Label>
+//             <DateInputWrapper>
+//               <IconWrapper>
+//                 <FontAwesomeIcon icon={faCalendarAlt} />
+//               </IconWrapper>
+//               <Controller
+//                 control={control}
+//                 name="runDate"
+//                 render={({ field }) => (
+//                   <DatePicker
+//                     selected={startDate}
+//                     onChange={(date) => {
+//                       setStartDate(date);
+//                       field.onChange(date);
+//                     }}
+//                     className="custom-datepicker"
+//                     calendarClassName={theme === darkTheme ? 'calendar-dark' : 'calendar-light'}
+//                   />
+//                 )}
+//               />
+//             </DateInputWrapper>
+//             {errors.runDate && <ErrorMessage>This field is required</ErrorMessage>}
+//           </FormGroup>
+//           <FormGroup>
+//             <Label>Select Output Type</Label>
+//             <RadioGroup>
+//               <RadioLabel>
+//                 <RadioInput
+//                   type="radio"
+//                   {...register("outputType", { required: true })}
+//                   value="all"
+//                 />
+//                 All
+//               </RadioLabel>
+//               <RadioLabel>
+//                 <RadioInput
+//                   type="radio"
+//                   {...register("outputType", { required: true })}
+//                   value="PVTableWithHeaders"
+//                 />
+//                 PVTableWithHeaders
+//               </RadioLabel>
+//               <RadioLabel>
+//                 <RadioInput
+//                   type="radio"
+//                   {...register("outputType", { required: true })}
+//                   value="PVUSDTableWithHeaders"
+//                 />
+//                 PVUSDTableWithHeaders
+//               </RadioLabel>
+//               <RadioLabel>
+//                 <RadioInput
+//                   type="radio"
+//                   {...register("outputType", { required: true })}
+//                   value="RiskTableWithHeaders"
+//                 />
+//                 RiskTableWithHeaders
+//               </RadioLabel>
+//               <RadioLabel>
+//                 <RadioInput
+//                   type="radio"
+//                   {...register("outputType", { required: true })}
+//                   value="RiskTableWithHeadersLite"
+//                 />
+//                 RiskTableWithHeadersLite
+//               </RadioLabel>
+//             </RadioGroup>
+//             {errors.outputType && <ErrorMessage>This field is required</ErrorMessage>}
+//           </FormGroup>
+//           <FormGroup>
+//             <Label htmlFor="outputDirectory">Enter Output Directory</Label>
+//             <IconWrapper>
+//               <FontAwesomeIcon icon={faFolderOpen} />
+//             </IconWrapper>
+//             <Input
+//               type="text"
+//               id="outputDirectory"
+//               {...register("outputDirectory", { required: true })}
+//               placeholder="\\global.nomura.com\gm\EU\Business_Reso\..."
+//             />
+//             {errors.outputDirectory && <ErrorMessage>This field is required</ErrorMessage>}
+//           </FormGroup>
+//           <FormGroup>
+//             <Label htmlFor="curveData">Enter Basis SOFR / Unmanaged Unsecured 3M Curve</Label>
+//             <IconWrapper>
+//               <FontAwesomeIcon icon={faExchangeAlt} />
+//             </IconWrapper>
+//             <TextArea
+//               id="curveData"
+//               {...register("curveData", { required: true })}
+//               rows="4"
+//               placeholder="Copy the curve (incl. tenors) from Excel without headers"
+//             />
+//             {errors.curveData && <ErrorMessage>This field is required</ErrorMessage>}
+//           </FormGroup>
+//           <SubmitButton type="submit">Submit</SubmitButton>
+//         </form>
+//       </FormContainer>
+//     </ThemeProvider>
+//   );
+// };
+
+// export default FVABotForm;
+
+
+
+import React, { useState, useRef } from 'react';
+import styled, { createGlobalStyle, ThemeProvider } from 'styled-components';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useForm, Controller } from 'react-hook-form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt, faFolderOpen, faExchangeAlt } from '@fortawesome/free-solid-svg-icons';
+import './fvaForm.css';
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background: ${(props) => props.theme.bodyBg};
+    color: ${(props) => props.theme.textColor};
+  }
+  .form-container {
+    --form-bg: ${(props) => props.theme.formBg};
+    --text-color: ${(props) => props.theme.textColor};
+    --input-bg: ${(props) => props.theme.inputBg};
+    --input-color: ${(props) => props.theme.inputColor};
+    --label-color: ${(props) => props.theme.labelColor};
+    --button-bg: ${(props) => props.theme.buttonBg};
+    --button-hover-bg: ${(props) => props.theme.buttonHoverBg};
+    --border-color: ${(props) => props.theme.borderColor};
+    --placeholder-color: ${(props) => props.theme.placeholderColor};
+    --toggle-bg: ${(props) => props.theme.toggleBg};
+    --toggle-switch-bg: ${(props) => props.theme.toggleSwitchBg};
+    --card-bg: ${(props) => props.theme.cardBg};
+    --box-shadow: ${(props) => props.theme.boxShadow};
+  }
+`;
+
+const darkTheme = {
+  bodyBg: 'linear-gradient(135deg, #1d1d1d, #333)',
+  formBg: '#282828',
+  textColor: '#ffffff',
+  inputBg: '#444',
+  inputColor: '#fff',
+  labelColor: '#b3b3b3',
+  buttonBg: '#6200ea',
+  buttonHoverBg: '#3700b3',
+  borderColor: '#555',
+  placeholderColor: '#757575',
+  toggleBg: '#757575',
+  toggleSwitchBg: '#121212',
+  cardBg: '#2c2c2c',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+};
+
+const lightTheme = {
+  bodyBg: 'linear-gradient(135deg, #ffffff, #f0f0f0)',
+  formBg: '#f9f9f9',
+  textColor: '#000000',
+  inputBg: '#ffffff',
+  inputColor: '#000',
+  labelColor: '#333333',
+  buttonBg: '#6200ea',
+  buttonHoverBg: '#3700b3',
+  borderColor: '#ccc',
+  placeholderColor: '#aaa',
+  toggleBg: '#ccc',
+  toggleSwitchBg: '#ffffff',
+  cardBg: '#ffffff',
+  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+};
+
+const FormContainer = styled.div.attrs({
+  className: 'form-container',
+})``;
+
+const FormGroup = styled.div.attrs({
+  className: 'form-group',
+})``;
+
+const Label = styled.label.attrs({
+  className: 'label',
+})``;
+
+const IconWrapper = styled.div.attrs({
+  className: 'icon-wrapper',
+})``;
+
+const Input = styled.input.attrs({
+  className: 'input',
+})``;
+
+const TextArea = styled.textarea.attrs({
+  className: 'textarea textarea-small',
+})``;
+
+const DateInputWrapper = styled.div.attrs({
+  className: 'date-input-wrapper',
+})``;
+
+const RadioGroup = styled.div.attrs({
+  className: 'radio-group',
+})``;
+
+const RadioLabel = styled.label.attrs({
+  className: 'radio-label',
+})``;
+
+const RadioInput = styled.input.attrs({
+  className: 'radio-input',
+})``;
+
+const SubmitButton = styled.button.attrs({
+  className: 'submit-button',
+})``;
+
+const ToggleSwitchContainer = styled.div.attrs({
+  className: 'toggle-switch-container',
+})``;
+
+const ToggleLabel = styled.label.attrs({
+  className: 'toggle-label',
+})``;
+
+const ToggleSwitch = styled.div.attrs({
+  className: 'toggle-switch',
+})``;
+
+const ErrorMessage = styled.p.attrs({
+  className: 'error-message',
+})``;
+
+const FVABotForm = () => {
+  const [theme, setTheme] = useState(darkTheme);
+  const { register, handleSubmit, control, formState: { errors } } = useForm();
+  const [startDate, setStartDate] = useState(new Date());
+  const fileInputRef = useRef(null);
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === darkTheme ? lightTheme : darkTheme));
+  };
+
+  const handleIconClick = () => {
+    fileInputRef.current.click();
+  };
+
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <FormContainer>
+        <ToggleSwitchContainer>
+          <ToggleLabel>Toggle Theme</ToggleLabel>
+          <ToggleSwitch
+            className={theme === lightTheme ? 'active' : ''}
+            onClick={toggleTheme}
+          />
+        </ToggleSwitchContainer>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <FormGroup>
+            <Label>Select Run Date</Label>
+            <DateInputWrapper>
+              <IconWrapper>
+                <FontAwesomeIcon icon={faCalendarAlt} />
+              </IconWrapper>
+              <Controller
+                control={control}
+                name="runDate"
+                render={({ field }) => (
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date) => {
+                      setStartDate(date);
+                      field.onChange(date);
+                    }}
+                    className="custom-datepicker"
+                    calendarClassName={theme === darkTheme ? 'calendar-dark' : 'calendar-light'}
+                  />
+                )}
+              />
+            </DateInputWrapper>
+            {errors.runDate && <ErrorMessage>This field is required</ErrorMessage>}
+          </FormGroup>
+          <FormGroup>
+            <Label>Select Output Type</Label>
+            <RadioGroup>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  {...register("outputType", { required: true })}
+                  value="all"
+                />
+                All
+              </RadioLabel>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  {...register("outputType", { required: true })}
+                  value="PVTableWithHeaders"
+                />
+                PVTableWithHeaders
+              </RadioLabel>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  {...register("outputType", { required: true })}
+                  value="PVUSDTableWithHeaders"
+                />
+                PVUSDTableWithHeaders
+              </RadioLabel>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  {...register("outputType", { required: true })}
+                  value="RiskTableWithHeaders"
+                />
+                RiskTableWithHeaders
+              </RadioLabel>
+              <RadioLabel>
+                <RadioInput
+                  type="radio"
+                  {...register("outputType", { required: true })}
+                  value="RiskTableWithHeadersLite"
+                />
+                RiskTableWithHeadersLite
+              </RadioLabel>
+            </RadioGroup>
+            {errors.outputType && <ErrorMessage>This field is required</ErrorMessage>}
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="outputDirectory">Enter Output Directory</Label>
+            <IconWrapper onClick={handleIconClick} style={{ cursor: 'pointer' }}>
+              <FontAwesomeIcon icon={faFolderOpen} />
+            </IconWrapper>
+            <Input
+              type="text"
+              id="outputDirectory"
+              {...register("outputDirectory", { required: true })}
+              placeholder="\\global.nomura.com\gm\EU\Business_Reso\..."
+            />
+            <input
+              type="file"
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              {...register("outputFile")}
+            />
+            {errors.outputDirectory && <ErrorMessage>This field is required</ErrorMessage>}
+          </FormGroup>
+          <FormGroup>
+            <Label htmlFor="curveData">Enter Basis SOFR / Unmanaged Unsecured 3M Curve</Label>
+            <IconWrapper>
+              <FontAwesomeIcon icon={faExchangeAlt} />
+            </IconWrapper>
+            <TextArea
+              id="curveData"
+              {...register("curveData", { required: true })}
+              rows="2"
+              placeholder="Copy the curve (incl. tenors) from Excel without headers"
+            />
+            {errors.curveData && <ErrorMessage>This field is required</ErrorMessage>}
+          </FormGroup>
+          <SubmitButton type="submit">Submit</SubmitButton>
+        </form>
+      </FormContainer>
+    </ThemeProvider>
+  );
+};
+
+export default FVABotForm;
+
+
+   :root {
+    --form-bg-dark: #282828;
+    --form-bg-light: #f9f9f9;
+    --text-color-dark: #ffffff;
+    --text-color-light: #000000;
+    --input-bg-dark: #444;
+    --input-bg-light: #ffffff;
+    --input-color-dark: #fff;
+    --input-color-light: #000;
+    --label-color-dark: #b3b3b3;
+    --label-color-light: #333333;
+    --button-bg-dark: #6200ea;
+    --button-bg-light: #6200ea;
+    --button-hover-bg-dark: #3700b3;
+    --button-hover-bg-light: #3700b3;
+    --border-color-dark: #555;
+    --border-color-light: #ccc;
+    --placeholder-color-dark: #757575;
+    --placeholder-color-light: #aaa;
+    --toggle-bg-dark: #757575;
+    --toggle-bg-light: #ccc;
+    --toggle-switch-bg-dark: #121212;
+    --toggle-switch-bg-light: #ffffff;
+    --card-bg-dark: #2c2c2c;
+    --card-bg-light: #ffffff;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  body {
+    transition: background 0.3s ease, color 0.3s ease;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  .form-container {
+    max-width: 800px;
+    margin: auto;
+    padding: 40px;
+    background-color: var(--form-bg);
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+  }
+  
+  .form-group {
+    margin-bottom: 25px;
+    position: relative;
+  }
+  
+  .label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--label-color);
+    font-size: 1.1em;
+  }
+  
+  .icon-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: var(--label-color);
+  }
+  
+  .input {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    color: var(--input-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .input:focus {
+    outline: none;
+    border-color: var(--button-bg);
+    box-shadow: 0 0 5px var(--button-bg);
+  }
+  
+  .input::placeholder {
+    color: var(--placeholder-color);
+  }
+  
+  .textarea {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    color: var(--input-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .textarea:focus {
+    outline: none;
+    border-color: var(--button-bg);
+    box-shadow: 0 0 5px var(--button-bg);
+  }
+  
+  .textarea::placeholder {
+    color: var(--placeholder-color);
+  }
+  
+  .textarea-small {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    color: var(--input-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    resize: both;
+    overflow: auto;
+    min-height: 50px;
+    max-height: 150px;
+  }
+  
+  .textarea-small:focus {
+    outline: none;
+    border-color: var(--button-bg);
+    box-shadow: 0 0 5px var(--button-bg);
+  }
+  
+  .date-input-wrapper {
+    position: relative;
+  }
+  
+  .date-input-wrapper .custom-datepicker {
+    width: 100%;
+    padding-left: 40px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--input-bg);
+    color: var(--input-color);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .date-input-wrapper .custom-datepicker:focus {
+    outline: none;
+    border-color: var(--button-bg);
+    box-shadow: 0 0 5px var(--button-bg);
+  }
+  
+  .date-input-wrapper .icon-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: var(--label-color);
+  }
+  
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .radio-label {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    margin-bottom: 10px;
+  }
+  
+  .radio-label:hover {
+    background-color: var(--button-bg);
+    color: #fff;
+  }
+  
+  .radio-input {
+    margin-right: 10px;
+  }
+  
+  .submit-button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--button-bg);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: var(--button-hover-bg);
+  }
+  
+  .toggle-switch-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .toggle-label {
+    margin-right: 10px;
+    color: var(--label-color);
+    font-weight: bold;
+  }
+  
+  .toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 25px;
+    background-color: var(--toggle-bg);
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .toggle-switch::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 21px;
+    height: 21px;
+    background-color: var(--toggle-switch-bg);
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+  }
+  
+  .toggle-switch.active::before {
+    transform: translateX(25px);
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+  }
+  

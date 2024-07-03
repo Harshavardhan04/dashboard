@@ -1000,4 +1000,16 @@ export default FVABotForm;
     font-size: 14px;
     margin-top: 5px;
   }
+
+# Install React Hook Form
+npm install react-hook-form
+
+# Install Styled Components
+npm install styled-components
+
+# Install Font Awesome Libraries
+npm install @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome
+
+# Install React Datepicker
+npm install react-datepicker
   

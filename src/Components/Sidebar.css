@@ -1,0 +1,126 @@
+
+.sidebar-content {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    padding-left: 15px;
+    background: rgba(52, 58, 64, 0.8); /* Make the sidebar translucent */
+    backdrop-filter: blur(10px);
+    z-index: 1100;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    overflow: auto;
+    transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+    transform: translateX(-100%);
+    opacity: 0.95;
+  }
+  
+  .sidebar-content.open {
+    transform: translateX(0);
+  }
+  
+  .sidebar-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px 20px;
+    background: none;
+  }
+  
+  .close-icon {
+    cursor: pointer;
+    font-size: 24px;
+    transition: color 0.3s ease;
+  }
+  
+  .close-icon:hover {
+    color: #007bff;
+  }
+  
+  .sidebar-nav {
+    flex-grow: 1;
+    padding-top: 20px;
+  }
+  
+  .sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .sidebar-nav ul li {
+    margin: 10px 0;
+  }
+  
+  .sidebar-nav ul li .menu-item {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    background-color: rgba(52, 58, 64, 0.8);
+  }
+  
+  .sidebar-nav ul li .menu-item span {
+    cursor: pointer;
+  }
+  
+  .sidebar-nav ul li .menu-item:hover {
+    background-color: rgba(73, 80, 87, 0.8);
+    transform: translateX(10px);
+  }
+  
+  .submenu-toggle {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-in-out;
+  }
+  
+  .submenu-toggle.open {
+    max-height: 300px; /* Adjust based on content */
+  }
+  
+  .submenu {
+    padding-left: 20px;
+    margin-top: 10px;
+  }
+  
+  .submenu li {
+    margin: 5px 0;
+  }
+  
+  .submenu li a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 10px 20px;
+    display: block;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    background-color: rgba(52, 58, 64, 0.8);
+  }
+  
+  .submenu li a:hover {
+    background-color: rgba(73, 80, 87, 0.8);
+    transform: translateX(10px);
+  }
+  
+  .menu-icon {
+    cursor: pointer;
+    font-size: 24px;
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    color: #ffffff;
+    z-index: 1200;
+    transition: color 0.3s ease;
+  }
+  
+  .menu-icon:hover {
+    color: #007bff;
+  }
+  

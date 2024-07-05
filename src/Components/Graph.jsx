@@ -1202,3 +1202,465 @@ const customTableStyles = {
 };
 
 export default HighchartsGraph;
+
+
+/* 
+.app-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--control-bg-color);
+  z-index: 1000;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.floating-box-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin-top: 50px; 
+}
+
+.translucent-box {
+  background-color: rgba(52, 58, 64, 0.5);
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.opaque-box {
+  background-color: var(--control-bg-color);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.download-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.download-options {
+  display: none;
+  flex-direction: column;
+}
+
+.download-section:hover .download-options {
+  display: flex;
+}
+
+.download-option {
+  margin: 5px 0;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.download-option:hover {
+  background-color: #0056b3;
+}
+
+.highcharts-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+  background-color: #343a40;
+  color: #fff;
+  position: sticky;
+  top: 50px; 
+  z-index: 900; 
+
+.control-group {
+  margin-bottom: 10px;
+}
+
+.currency-dropdown {
+  min-width: 200px;
+}
+
+.date-input {
+  width: 120px;
+  margin-left: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg-color);
+  color: var(--input-text-color);
+}
+
+.main-panel {
+  flex-grow: 1;
+  margin-top: 20px; 
+  padding: 20px;
+}
+
+.chart-container {
+  width: 100%;
+  height: 500px;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.summary-box {
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #f9f9f9;
+}
+
+.data-table-section {
+  margin-top: 20px;
+  width: 100%;
+}
+
+
+:root {
+  --background-color: #1e1e1e;
+  --text-color: #ffffff;
+  --control-bg-color: #343a40;
+  --border-color: #ffffff;
+  --input-bg-color: #343a40;
+  --input-text-color: #ffffff;
+}
+
+.light-theme {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --control-bg-color: #f0f0f0;
+  --border-color: #000000;
+  --input-bg-color: #ffffff;
+  --input-text-color: #000000;
+}
+
+.dark-theme {
+  --background-color: #ffffff;
+  --text-color: #ffffff;
+  --control-bg-color: #343a40;
+  --border-color: #ffffff;
+  --input-bg-color: #343a40;
+  --input-text-color: #ffffff;
+} */
+
+/* HighChartsGraph.css */
+
+/* body {
+  background-color: rgba(169, 169, 169, 0.2); 
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  background-color: black; 
+  color: var(--text-color);
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--control-bg-color);
+  z-index: 1000;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.floating-box-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin-top: 70px; 
+}
+
+.translucent-box {
+  background-color: rgba(52, 58, 64, 0.8); 
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.control-group label {
+  margin-right: 10px;
+}
+
+.currency-dropdown {
+  width: 200px;
+}
+
+.date-input {
+  width: 120px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg-color);
+  color: var(--input-text-color);
+}
+
+.download-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.download-options {
+  display: none;
+  flex-direction: column;
+}
+
+.download-section:hover .download-options {
+  display: flex;
+}
+
+.download-option {
+  margin: 5px 0;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.download-option:hover {
+  background-color: #0056b3;
+}
+
+.main-panel {
+  flex-grow: 1;
+  margin-top: 50px; 
+  padding: 20px;
+}
+
+.chart-container {
+  width: 100%;
+  height: 500px;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.summary-box {
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #f9f9f9;
+}
+
+.data-table-section {
+  margin-top: 20px;
+  width: 100%;
+}
+
+
+:root {
+  --background-color: rgba(169, 169, 169, 0.2); 
+  --text-color: #ffffff;
+  --control-bg-color: #343a40;
+  --border-color: #ffffff;
+  --input-bg-color: #343a40;
+  --input-text-color: #ffffff;
+}
+
+.light-theme {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --control-bg-color: #f0f0f0;
+  --border-color: #000000;
+  --input-bg-color: #ffffff;
+  --input-text-color: #000000;
+}
+
+.dark-theme {
+  --background-color: #1e1e1e;
+  --text-color: #ffffff;
+  --control-bg-color: #343a40;
+  --border-color: #ffffff;
+  --input-bg-color: #343a40;
+  --input-text-color: #ffffff;
+} */
+
+
+/* HighChartsGraph.css */
+
+body {
+  background-color: rgba(169, 169, 169, 0.2); /* Faint grey background */
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(0, 0, 0); /* Make container transparent to show body background */
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--control-bg-color);
+  z-index: 1000;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.floating-box-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin-top: 70px; /* Adjust to move the box down */
+}
+
+.translucent-box {
+  background-color: rgba(52, 58, 64, 0.8); /* More translucent */
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.control-group label {
+  margin-right: 10px;
+}
+
+.currency-dropdown {
+  width: 200px;
+}
+
+.date-input {
+  width: 120px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg-color);
+  color: var(--input-text-color);
+}
+
+.main-panel {
+  flex-grow: 1;
+  margin-top: 50px; /* Adjust based on the height of the top controls */
+  padding: 20px;
+}
+
+.chart-container {
+  width: 100%;
+  height: 500px;
+}
+
+.chart-controls {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end; /* Align to the right */
+  gap: 10px;
+}
+
+.toggle-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.summary-box {
+  border: 1px solid black;
+  padding: 10px;
+  margin-top: 20px;
+  background-color: #f9f9f9;
+}
+
+.data-table-section {
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* Light/Dark Theme CSS Variables */
+:root {
+  --background-color: rgba(169, 169, 169, 0.2); /* Updated to a light grey */
+  --text-color: #ffffff;
+  --control-bg-color: #343a40;
+  --border-color: #ffffff;
+  --input-bg-color: #343a40;
+  --input-text-color: #ffffff;
+}
+
+.light-theme {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --control-bg-color: #f0f0f0;
+  --border-color: #000000;
+  --input-bg-color: #ffffff;
+  --input-text-color: #000000;
+}
+
+.dark-theme {
+  --background-color: #1e1e1e;
+  --text-color: #ffffff;
+  --control-bg-color: #343a40;
+  --border-color: #ffffff;
+  --input-bg-color: #343a40;
+  --input-text-color: #ffffff;
+}

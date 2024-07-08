@@ -1,0 +1,464 @@
+import React from 'react';
+import DataTable from 'react-data-table-component';
+
+const Table = ({ data, selectedCurrencies, darkMode }) => {
+  const columns = [
+    { name: 'Date', selector: (row) => row.Date, sortable: true },
+    { name: 'Target', selector: (row) => row.Target, sortable: true },
+    ...selectedCurrencies.map((currency) => ({
+      name: currency.value,
+      selector: (row) => row[currency.value],
+      sortable: true,
+    })),
+    { name: 'Total', selector: (row) => row.Total, sortable: true },
+  ];
+
+  const customTableStyles = {
+    header: {
+      style: {
+        fontSize: '22px',
+        fontWeight: 'bold',
+        color: darkMode ? '#fff' : '#000',
+        backgroundColor: darkMode ? '#343a40' : '#f0f0f0',
+      },
+    },
+    rows: {
+      style: {
+        fontSize: '16px',
+        color: darkMode ? '#fff' : '#000',
+        backgroundColor: darkMode ? '#1a1a1a' : '#fff',
+        '&:not(:last-of-type)': {
+          borderBottomStyle: 'solid',
+          borderBottomWidth: '1px',
+          borderBottomColor: darkMode ? '#343a40' : '#e0e0e0',
+        },
+      },
+    },
+    headCells: {
+      style: {
+        fontSize: '18px',
+        fontWeight: 'bold',
+        color: darkMode ? '#fff' : '#000',
+        backgroundColor: darkMode ? '#343a40' : '#f0f0f0',
+      },
+    },
+    cells: {
+      style: {
+        fontSize: '16px',
+        color: darkMode ? '#fff' : '#000',
+        backgroundColor: darkMode ? '#1a1a1a' : '#fff',
+      },
+    },
+  };
+
+  return (
+    <div className="data-table-section">
+      <DataTable
+        title="LCH Notional | Summary Table"
+        columns={columns}
+        data={data}
+        pagination
+        highlightOnHover
+        pointerOnHover
+        customStyles={customTableStyles}
+      />
+    </div>
+  );
+};
+
+export default Table;
+
+
+graph 
+
+
+import React, { useState, useEffect, useRef } from 'react';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import HighchartsBoost from 'highcharts/modules/boost';
+import HighchartsExporting from 'highcharts/modules/exporting';
+import HighchartsAnnotations from 'highcharts/modules/annotations';
+import HighchartsMore from 'highcharts/highcharts-more';
+import DatePicker from 'react-datepicker';
+import Select from 'react-select';
+import 'react-datepicker/dist/react-datepicker.css';
+import '../Styles/HighChartsGraph.css';
+
+HighchartsBoost(Highcharts);
+HighchartsExporting(Highcharts);
+HighchartsAnnotations(Highcharts);
+HighchartsMore(Highcharts);
+
+const HighchartsGraph = ({ darkMode, setDarkMode, selectedCurrencies, setSelectedCurrencies, tableData, setTableData }) => {
+  const [showSpikeLines, setShowSpikeLines] = useState(false);
+  const [compareWithTarget, setCompareWithTarget] = useState(false);
+  const [summary, setSummary] = useState('');
+  const [startDate, setStartDate] = useState(new Date('2024-06-01'));
+  const [endDate, setEndDate] = useState(new Date('2024-06-25'));
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const chartRef = useRef(null);
+  const latestSummaryRef = useRef('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/xva`);
+        const result = await response.json();
+        setData(result);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const getFilteredData = () => {
+    return data.filter(d => {
+      const date = new Date(d.Date).getTime();
+      return date >= startDate.getTime() && date <= endDate.getTime();
+    });
+  };
+
+  useEffect(() => {
+    if (!loading && data.length > 0) {
+      const updateSummary = () => {
+        if (summary !== latestSummaryRef.current) {
+          setSummary(latestSummaryRef.current);
+        }
+      };
+
+      const interval = setInterval(updateSummary, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [loading, data, summary]);
+
+  const filteredData = getFilteredData();
+
+  const totalLine = {
+    name: 'Total',
+    data: filteredData.map(d => [new Date(d.Date).getTime(), d.Total]),
+    color: '#343a40',
+    marker: { enabled: false },
+    zIndex: 1,
+    boostThreshold: 1,
+  };
+
+  const shadeData = {
+    name: 'Shaded Area',
+    data: filteredData.map(d => ({
+      x: new Date(d.Date).getTime(),
+      low: Math.min(d.Total, d.Target),
+      high: Math.max(d.Total, d.Target),
+    })),
+    type: 'arearange',
+    lineWidth: 0,
+    linkedTo: 'Total',
+    color: 'rgba(0, 123, 255, 0.2)',
+    fillOpacity: 0.3,
+    zIndex: 0,
+    marker: {
+      enabled: false,
+    },
+    boostThreshold: 1,
+    boost: false
+  };
+
+  const handleCurrencyChange = (selectedOptions) => {
+    setSelectedCurrencies(selectedOptions);
+    updateTableColumns(selectedOptions);
+  };
+
+  const updateTableColumns = (selectedOptions) => {
+    const columns = [
+      { name: 'Date', selector: (row) => row.Date, sortable: true },
+      { name: 'Target', selector: (row) => row.Target, sortable: true },
+      ...selectedOptions.map((currency) => ({
+        name: currency.value,
+        selector: (row) => row[currency.value],
+        sortable: true,
+      })),
+      { name: 'Total', selector: (row) => row.Total, sortable: true },
+    ];
+
+    const tableData = filteredData.map((d) => ({
+      Date: d.Date,
+      Target: d.Target,
+      ...selectedOptions.reduce((acc, curr) => {
+        acc[curr.value] = d[curr.value];
+        return acc;
+      }, {}),
+      Total: d.Total,
+    }));
+
+    setTableData({ columns, tableData });
+  };
+
+  const getData = () => {
+    const compareData = [
+      ...selectedCurrencies.map((currency) => ({
+        name: currency.value,
+        data: filteredData.map((d) => [new Date(d.Date).getTime(), d[currency.value]]),
+        color: getCurrencyColor(currency.value),
+        marker: { enabled: false },
+        boostThreshold: 1,
+      })),
+      totalLine,
+      {
+        name: 'Target',
+        data: filteredData.map((d) => [new Date(d.Date).getTime(), d.Target]),
+        color: '#007bff',
+        marker: { enabled: false },
+        zIndex: 1,
+        boostThreshold: 1,
+      },
+      shadeData,
+    ];
+    return compareWithTarget ? compareData : compareData.slice(0, -1);
+  };
+
+  const getCurrencyColor = (currency) => {
+    const colors = {
+      AUD: '#ff6f61',
+      EUR: '#28a745',
+      GBP: '#dc3545',
+      JPY: '#6f42c1',
+      USD: '#ffc107',
+    };
+    return colors[currency] || '#000000';
+  };
+
+  const handleTooltipFormatter = function () {
+    const points = this.points;
+    let targetValue = null;
+    let totalValue = null;
+
+    points.forEach((point) => {
+      if (point.series.name === 'Target') {
+        targetValue = point.y;
+      }
+      if (point.series.name === 'Total') {
+        totalValue = point.y;
+      }
+    });
+
+    if (targetValue !== null && totalValue !== null) {
+      const difference = (totalValue - targetValue).toFixed(2);
+      const totalBreakdown = selectedCurrencies
+        .map((currency) => {
+          const point = points.find((p) => p.series.name === currency.value);
+          return point ? `${currency.value}: ${point.y.toFixed(2)}` : `${currency.value}: N/A`;
+        })
+        .join('<br>');
+
+      let summaryHTML = `<strong>Total: ${totalValue.toFixed(2)}</strong><br>`;
+      summaryHTML += `<strong>Target: ${targetValue.toFixed(2)}</strong><br>`;
+      summaryHTML += `Difference: ${difference}<br><br>`;
+      summaryHTML += `<strong>Breakdown of Selected Currencies:</strong><br>${totalBreakdown}`;
+
+      latestSummaryRef.current = summaryHTML;
+
+      return points.reduce((s, point) => {
+        return (
+          s +
+          `<br/><span style="color:${point.series.color}">${point.series.name}</span>: ${point.y}`
+        );
+      }, `<b>${Highcharts.dateFormat('%A, %b %e, %Y', this.x)}</b>`);
+    }
+
+    return points.reduce((s, point) => {
+      return (
+        s +
+        `<br/><span style="color:${point.series.color}">${point.series.name}</span>: ${point.y}`
+      );
+    }, `<b>${Highcharts.dateFormat('%A, %b %e, %Y', this.x)}</b>`);
+  };
+
+  const options = {
+    chart: {
+      type: 'line',
+      zoomType: 'x',
+      backgroundColor: darkMode ? '#1e1e1e' : '#f0f0f0',
+      events: {
+        load: function () {
+          this.xAxis[0].setExtremes(startDate.getTime(), endDate.getTime());
+        },
+      },
+      boost: {
+        useGPUTranslations: true,
+        usePreAllocated: true,
+      },
+    },
+    title: {
+      text: 'Currency Exchange Rates',
+    },
+    xAxis: {
+      type: 'datetime',
+      title: {
+        text: 'Date',
+      },
+      min: startDate.getTime(),
+      max: endDate.getTime(),
+    },
+    yAxis: {
+      title: {
+                text: 'Value',
+      },
+    },
+    legend: {
+      layout: 'horizontal',
+      align: 'center',
+      verticalAlign: 'bottom',
+      itemStyle: {
+        color: darkMode ? '#ffffff' : '#000000',
+      },
+    },
+    tooltip: {
+      shared: true,
+      crosshairs: showSpikeLines,
+      formatter: handleTooltipFormatter,
+    },
+    series: getData(),
+    navigation: {
+      buttonOptions: {
+        enabled: true,
+      },
+    },
+    exporting: {
+      buttons: {
+        contextButton: {
+          menuItems: [
+            'viewFullscreen',
+            'printChart',
+            'downloadPNG',
+            'downloadJPEG',
+            'downloadPDF',
+            'downloadSVG'
+          ]
+        }
+      }
+    },
+  };
+
+  return (
+    <div className="app-container">
+      <Topbar />
+      <div className="floating-box-container">
+        <div className="translucent-box">
+          <div className="control-group">
+            <label>Select Currencies to Include in Total: </label>
+            <Select
+              isMulti
+              name="currencies"
+              options={[
+                { value: 'AUD', label: 'AUD' },
+                { value: 'EUR', label: 'EUR' },
+                { value: 'GBP', label: 'GBP' },
+                { value: 'JPY', label: 'JPY' },
+                { value: 'USD', label: 'USD' },
+              ]}
+              className="currency-dropdown"
+              classNamePrefix="select"
+              value={selectedCurrencies}
+              onChange={handleCurrencyChange}
+            />
+          </div>
+          <div className="control-group">
+            <label>Select Date Range: </label>
+            <div style={{ display: 'flex' }}>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                className="date-input"
+              />
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+                className="date-input"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="main-panel">
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={options}
+          containerProps={{ className: 'chart-container' }}
+          updateArgs={[true, true, true]}
+          ref={chartRef}
+        />
+        <div className="chart-controls">
+          <button onClick={() => setCompareWithTarget(!compareWithTarget)} className="toggle-button">
+            {compareWithTarget ? 'Disable Compare with Target' : 'Enable Compare with Target'}
+          </button>
+          <div className="dropdown">
+            <button className="toggle-button">Download</button>
+            <div className="dropdown-content">
+              <button onClick={() => chartRef.current.chart.exportChart({ type: 'image/png' })}>PNG</button>
+              <button onClick={() => chartRef.current.chart.exportChart({ type: 'image/jpeg' })}>JPEG</button>
+              <button onClick={() => chartRef.current.chart.exportChart({ type: 'application/pdf' })}>PDF</button>
+              <button onClick={() => chartRef.current.chart.exportChart({ type: 'image/svg+xml' })}>SVG</button>
+            </div>
+          </div>
+          <button onClick={setDarkMode} className="toggle-button">
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+        </div>
+        {compareWithTarget && (
+          <div className="summary-box">
+            <h3>Summary</h3>
+            <div dangerouslySetInnerHTML={{ __html: summary }} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default HighchartsGraph;
+
+
+app
+
+import React, { useState } from 'react';
+import HighchartsGraph from './Components/HighchartsGraph';
+import Table from './Components/Table';
+import './App.css';
+
+function App() {
+  const [darkMode, setDarkMode] = useState(true);
+  const [selectedCurrencies, setSelectedCurrencies] = useState([{ value: 'AUD', label: 'AUD' }]);
+  const [tableData, setTableData] = useState([]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
+  return (
+    <div className={`app-container ${darkMode ? 'dark-theme' : 'light-theme'}`}>
+      <HighchartsGraph
+        darkMode={darkMode}
+        setDarkMode={toggleDarkMode}
+        selectedCurrencies={selectedCurrencies}
+        setSelectedCurrencies={setSelectedCurrencies}
+        tableData={tableData}
+        setTableData={setTableData}
+      />
+      <Table data={tableData} selectedCurrencies={selectedCurrencies} darkMode={darkMode} />
+    </div>
+  );
+}
+
+export default App;
+
